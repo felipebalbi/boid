@@ -4,6 +4,7 @@
 extern crate alloc;
 
 mod boid;
+mod buffer;
 mod simulation;
 
 use crate::simulation::Simulation;

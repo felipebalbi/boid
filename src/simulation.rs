@@ -1,4 +1,4 @@
-use crate::{boid::Boid, get_random_usize_range};
+use crate::{boid::Boid, buffer::Buffer, get_random_usize_range};
 use alloc::vec::Vec;
 use micromath::vector::F32x2;
 use uefi::{
@@ -15,13 +15,14 @@ pub struct Simulation {
     boids: Vec<Boid>,
     width: usize,
     height: usize,
+    buffer: Buffer,
 }
 
 impl Simulation {
     pub fn new(rng: &mut Rng, width: usize, height: usize) -> Self {
         let mut boids = Vec::new();
 
-        for _ in 0..100 {
+        for _ in 0..200 {
             let position = F32x2 {
                 x: get_random_usize_range(rng, 0, width) as f32,
                 y: get_random_usize_range(rng, 0, height) as f32,
@@ -39,32 +40,24 @@ impl Simulation {
             boids,
             width,
             height,
+            buffer: Buffer::new(width, height),
         }
     }
 
     pub fn run(&mut self, bt: &BootServices, gop: &mut GraphicsOutput) -> Result {
         loop {
             let flock = self.boids.clone();
-
-            self.clear_screen(gop)?;
+            self.buffer.clear(gop)?;
 
             for boid in self.boids.iter_mut() {
                 boid.flock(&flock);
                 boid.update(self.width, self.height);
-                boid.draw(gop)?;
+                boid.draw(&mut self.buffer)?;
             }
+
+            self.buffer.blit(gop)?;
 
             bt.stall(16_667);
         }
-    }
-
-    fn clear_screen(&self, gop: &mut GraphicsOutput) -> Result {
-        let color = BltPixel::new(0, 0, 0);
-
-        gop.blt(BltOp::VideoFill {
-            color,
-            dest: (0, 0),
-            dims: (self.width, self.height),
-        })
     }
 }

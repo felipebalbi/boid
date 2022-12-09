@@ -1,16 +1,9 @@
+use crate::buffer::Buffer;
 use micromath::vector::{F32x2, Vector};
-use uefi::proto::console::gop::{BltOp, BltPixel, GraphicsOutput};
 use uefi::Result;
 
 #[derive(PartialEq, Clone, Debug)]
-struct Rectangle {
-    width: f32,
-    height: f32,
-}
-
-#[derive(PartialEq, Clone, Debug)]
 pub struct Boid {
-    body: Rectangle,
     position: F32x2,
     velocity: F32x2,
     acceleration: F32x2,
@@ -22,10 +15,6 @@ const MAX_VELOCITY: f32 = 5.0;
 impl Boid {
     pub fn new(position: F32x2, velocity: F32x2) -> Self {
         Self {
-            body: Rectangle {
-                width: 5.0,
-                height: 5.0,
-            },
             acceleration: Default::default(),
             position,
             velocity,
@@ -33,16 +22,16 @@ impl Boid {
     }
 
     fn edges(&mut self, width: usize, height: usize) {
-        if (self.position.x + self.body.width) >= width as f32 {
-            self.position.x = self.body.width;
-        } else if (self.position.x) <= 0.0 {
-            self.position.x = width as f32 - self.body.width;
+        if self.position.x >= width as f32 {
+            self.position.x = 0.0;
+        } else if self.position.x <= 0.0 {
+            self.position.x = width as f32;
         }
 
-        if (self.position.y + self.body.height) >= height as f32 {
-            self.position.y = self.body.height;
-        } else if (self.position.y) <= self.body.height {
-            self.position.y = height as f32 - self.body.height;
+        if self.position.y >= height as f32 {
+            self.position.y = 0.0;
+        } else if self.position.y <= 0.0 {
+            self.position.y = height as f32;
         }
     }
 
@@ -160,14 +149,14 @@ impl Boid {
         self.edges(width, height);
     }
 
-    pub fn draw(&mut self, gop: &mut GraphicsOutput) -> Result {
-        let color = BltPixel::new(255, 0, 0);
+    pub fn draw(&mut self, buffer: &mut Buffer) -> Result {
+        let pixel = buffer
+            .pixel(self.position.x as usize, self.position.y as usize)
+            .unwrap();
 
-        gop.blt(BltOp::VideoFill {
-            color,
-            dest: (self.position.x as usize, self.position.y as usize),
-            dims: (self.body.width as usize, self.body.height as usize),
-        })?;
+        pixel.red = 255;
+        pixel.green = 255;
+        pixel.blue = 255;
 
         Ok(())
     }
