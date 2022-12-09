@@ -2,13 +2,13 @@ use micromath::vector::{F32x2, Vector};
 use uefi::proto::console::gop::{BltOp, BltPixel, GraphicsOutput};
 use uefi::Result;
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 struct Rectangle {
     width: f32,
     height: f32,
 }
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Boid {
     body: Rectangle,
     position: F32x2,
