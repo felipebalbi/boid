@@ -36,7 +36,7 @@ impl Boid {
     }
 
     fn alignment(&self, boids: &[Boid]) -> F32x2 {
-        let perception_radius = 25.0;
+        let perception_radius = 50.0;
         let mut steering = F32x2::default();
         let mut total = 0.0;
 
@@ -65,7 +65,7 @@ impl Boid {
     }
 
     fn separation(&self, boids: &[Boid]) -> F32x2 {
-        let perception_radius = 24.0;
+        let perception_radius = 50.0;
         let mut steering = F32x2::default();
         let mut total = 0.0;
 
@@ -96,7 +96,7 @@ impl Boid {
     }
 
     fn cohesion(&self, boids: &[Boid]) -> F32x2 {
-        let perception_radius = 50.0;
+        let perception_radius = 100.0;
         let mut steering = F32x2::default();
         let mut total = 0.0;
 
