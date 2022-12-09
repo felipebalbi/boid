@@ -22,16 +22,12 @@ impl Boid {
     }
 
     fn edges(&mut self, width: usize, height: usize) {
-        if self.position.x >= width as f32 {
-            self.position.x = 0.0;
-        } else if self.position.x <= 0.0 {
-            self.position.x = width as f32;
+        if self.position.x + 1.0 > width as f32 || self.position.x - 1.0 < 0.0 {
+            self.velocity.x *= -1.0;
         }
 
-        if self.position.y >= height as f32 {
-            self.position.y = 0.0;
-        } else if self.position.y <= 0.0 {
-            self.position.y = height as f32;
+        if self.position.y + 1.0 > height as f32 || self.position.y - 1.0 < 0.0 {
+            self.velocity.y *= -1.0;
         }
     }
 
