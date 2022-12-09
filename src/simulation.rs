@@ -3,10 +3,7 @@ use alloc::vec::Vec;
 use micromath::vector::F32x2;
 use uefi::{
     prelude::BootServices,
-    proto::{
-        console::gop::{BltOp, BltPixel, GraphicsOutput},
-        rng::Rng,
-    },
+    proto::{console::gop::GraphicsOutput, rng::Rng},
     Result,
 };
 
@@ -47,7 +44,7 @@ impl Simulation {
     pub fn run(&mut self, bt: &BootServices, gop: &mut GraphicsOutput) -> Result {
         loop {
             let flock = self.boids.clone();
-            self.buffer.clear(gop)?;
+            self.buffer.clear();
 
             for boid in self.boids.iter_mut() {
                 boid.flock(&flock);

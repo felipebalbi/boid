@@ -1,4 +1,5 @@
 use crate::buffer::Buffer;
+use log::info;
 use micromath::vector::{F32x2, Vector};
 use uefi::Result;
 
@@ -145,18 +146,25 @@ impl Boid {
         }
 
         self.acceleration *= 0.0;
-
         self.edges(width, height);
     }
 
     pub fn draw(&mut self, buffer: &mut Buffer) -> Result {
-        let pixel = buffer
-            .pixel(self.position.x as usize, self.position.y as usize)
-            .unwrap();
+        let pixel = buffer.pixel(self.position.x as usize, self.position.y as usize);
 
-        pixel.red = 255;
-        pixel.green = 255;
-        pixel.blue = 255;
+        match pixel {
+            Some(pixel) => {
+                pixel.red = 255;
+                pixel.green = 255;
+                pixel.blue = 255;
+            }
+            None => {
+                info!(
+                    "Inexistent pixel at {}x{}",
+                    self.position.x as usize, self.position.y as usize
+                );
+            }
+        }
 
         Ok(())
     }
