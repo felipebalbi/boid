@@ -10,7 +10,7 @@ pub struct Boid {
 }
 
 const MAX_FORCE: f32 = 0.2;
-const MAX_VELOCITY: f32 = 5.0;
+const MAX_VELOCITY: f32 = 10.0;
 
 impl Boid {
     pub fn new(position: F32x2, velocity: F32x2) -> Self {
@@ -22,11 +22,11 @@ impl Boid {
     }
 
     fn edges(&mut self, width: usize, height: usize) {
-        if self.position.x + 1.0 > width as f32 || self.position.x - 1.0 < 0.0 {
+        if self.position.x >= width as f32 || self.position.x <= 0.0 {
             self.velocity.x *= -1.0;
         }
 
-        if self.position.y + 1.0 > height as f32 || self.position.y - 1.0 < 0.0 {
+        if self.position.y >= height as f32 || self.position.y <= 0.0 {
             self.velocity.y *= -1.0;
         }
     }
@@ -132,6 +132,8 @@ impl Boid {
     }
 
     pub fn update(&mut self, width: usize, height: usize) {
+        self.edges(width, height);
+
         self.position += self.velocity;
         self.velocity += self.acceleration;
 
@@ -141,7 +143,6 @@ impl Boid {
         }
 
         self.acceleration *= 0.0;
-        self.edges(width, height);
     }
 
     pub fn draw(&mut self, buffer: &mut Buffer) -> Result {
