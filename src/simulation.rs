@@ -18,7 +18,7 @@ impl Simulation {
     pub fn new(rng: &mut Rng, width: usize, height: usize) -> Self {
         let mut boids = Vec::new();
 
-        for _ in 0..200 {
+        for _ in 0..100 {
             let position = F32x2 {
                 x: get_random_usize_range(rng, 0, width) as f32,
                 y: get_random_usize_range(rng, 0, height) as f32,
