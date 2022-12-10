@@ -2,6 +2,7 @@ use crate::{boid::Boid, buffer::Buffer, get_random_usize_range};
 use alloc::vec::Vec;
 use micromath::vector::F32x2;
 use uefi::{
+    prelude::BootServices,
     proto::{console::gop::GraphicsOutput, rng::Rng},
     Result,
 };
@@ -40,10 +41,10 @@ impl Simulation {
         }
     }
 
-    pub fn run(&mut self, gop: &mut GraphicsOutput) -> Result {
+    pub fn run(&mut self, gop: &mut GraphicsOutput, bt: &BootServices) -> Result {
         loop {
             let flock = self.boids.clone();
-            self.buffer.clear();
+            self.buffer.clear(bt);
 
             for boid in self.boids.iter_mut() {
                 boid.flock(&flock);

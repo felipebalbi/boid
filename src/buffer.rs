@@ -1,6 +1,9 @@
+use core::mem::{size_of, transmute};
+
 use alloc::vec;
 use alloc::vec::Vec;
 use uefi::{
+    prelude::BootServices,
     proto::console::gop::{BltOp, BltPixel, BltRegion, GraphicsOutput},
     Result,
 };
@@ -39,13 +42,21 @@ impl Buffer {
         })
     }
 
-    pub fn clear(&mut self) {
+    pub fn clear(&mut self, bt: &BootServices) {
         if self.current_buffer == 0 {
             self.current_buffer = 1;
         } else {
             self.current_buffer = 0;
         }
 
-        self.pixels[self.current_buffer] = vec![BltPixel::new(0, 0, 0); self.width * self.height];
+        unsafe {
+            let buf = &mut self.pixels[self.current_buffer];
+
+            bt.set_mem(
+                transmute::<*mut BltPixel, *mut u8>(buf.as_mut_ptr()),
+                self.width * self.height * size_of::<BltPixel>(),
+                0,
+            );
+        }
     }
 }

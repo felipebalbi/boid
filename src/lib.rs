@@ -28,7 +28,7 @@ pub fn run(bt: &BootServices) -> Result {
 
     // Instantiate our Simulation
     let mut simulation = Simulation::new(&mut rng, width, height);
-    simulation.run(&mut gop)
+    simulation.run(&mut gop, bt)
 }
 
 fn get_random_usize(rng: &mut Rng) -> usize {
