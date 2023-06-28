@@ -1,5 +1,4 @@
 #![no_std]
-#![feature(abi_efiapi)]
 
 extern crate alloc;
 

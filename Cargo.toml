@@ -8,5 +8,5 @@ publish = false
 [dependencies]
 log = "0.4.17"
 micromath = { version = "2.0.0", features = ["vector"] }
-uefi = {version = "0.18.0", features = ["alloc"]}
-uefi-services = "0.15.0"
+uefi = {version = "0.24", features = ["alloc"]}
+uefi-services = "0.21"

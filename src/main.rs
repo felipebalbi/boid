@@ -1,6 +1,5 @@
 #![no_main]
 #![no_std]
-#![feature(abi_efiapi)]
 
 use boid::run;
 use uefi::prelude::*;
